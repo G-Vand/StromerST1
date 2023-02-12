@@ -1,0 +1,25 @@
+{
+  "config": {
+    "flow_title": "Stromer e-bike",
+    "step": {
+      "user": {
+        "description": "Provide your Stromer API details",
+        "data": {
+          "password": "Password",
+          "username" : "Username",
+          "client_id": "Client ID",
+          "client_secret": "Client Secret (optional, not needed if you client id starts with 4P"
+        }
+      }
+    },
+    "error": {
+      "already_configured": "This device is already configured",
+      "invalid_auth": "Invalid authentication, check your password and/or ID/SECRET",
+      "cannot_connect": "Cannot connect",
+      "unknown": "Unknown error!"
+    },
+    "abort": {
+      "already_configured": "This device is already configured"
+    }
+  }
+}
