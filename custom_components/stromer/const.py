@@ -2,7 +2,7 @@
 
 import logging
 
-DOMAIN = "stromer"
+DOMAIN = "stromer_st1"
 LOGGER = logging.getLogger(__name__)
 
 COORDINATOR = "coordinator"
