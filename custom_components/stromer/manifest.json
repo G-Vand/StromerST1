@@ -1,10 +1,10 @@
 {
   "domain": "stromer_st1",
   "name": "Stromer e-bike ST1",
-  "version": "0.1.0",
-  "documentation": "https://github.com/G-Vand/StromerST1",
-  "requirements": [],
   "codeowners": ["@G-Vand"],
+  "config_flow": true,
+  "documentation": "https://github.com/G-Vand/StromerST1",
   "iot_class": "cloud_polling",
-  "config_flow": true
+  "requirements": [],
+  "version": "0.2.0"
 }
