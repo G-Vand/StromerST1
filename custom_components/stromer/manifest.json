@@ -1,10 +1,12 @@
 {
-  "domain": "stromer_st1",
-  "name": "Stromer e-bike ST1",
-  "codeowners": ["@G-Vand"],
+  "domain": "stromer",
+  "name": "Stromer e-bike",
+  "codeowners": ["@CoMPaTech"],
   "config_flow": true,
-  "documentation": "https://github.com/G-Vand/StromerST1",
+  "documentation": "https://github.com/CoMPaTech/stromer",
+  "integration_type": "device",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/CoMPaTech/stromer/issues",
   "requirements": [],
-  "version": "0.2.0"
+  "version": "0.3.1"
 }
