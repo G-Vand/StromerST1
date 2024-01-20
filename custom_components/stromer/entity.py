@@ -11,7 +11,7 @@ from .const import DOMAIN
 from .coordinator import StromerData, StromerDataUpdateCoordinator
 
 
-class StromerEntity(CoordinatorEntity[StromerData]):
+class StromerEntity(CoordinatorEntity[StromerData]):  # type:ignore [misc]
     """Represent a Stromer Entity."""
 
     coordinator: StromerDataUpdateCoordinator
@@ -35,11 +35,11 @@ class StromerEntity(CoordinatorEntity[StromerData]):
             name=data.get("nickname"),
             sw_version=data.get("suiversion"),
             hw_version=data.get("tntversion"),
-            stromer_id=data.get("bike_id"),
-            type=data.get("bikemodel"),
-            frame_color=data.get("color"),
-            frame_size=data.get("size"),
-            hardware=data.get("hardware"),
+            #            stromer_id=data.get("bike_id"),
+            #            type=data.get("bikemodel"),
+            #            frame_color=data.get("color"),
+            #            frame_size=data.get("size"),
+            #            hardware=data.get("hardware"),
         )
 
         self._attr_device_info.update(
@@ -55,12 +55,12 @@ class StromerEntity(CoordinatorEntity[StromerData]):
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        return super().available
+        return super().available  # type: ignore[no-any-return]
 
     @property
     def device(self) -> dict[str, Any]:
         """Return data for this device."""
-        return self.coordinator.data.bike_id
+        return self.coordinator.data.bike_id  # type: ignore[no-any-return]
 
     async def async_added_to_hass(self) -> None:
         """Subscribe to updates."""

@@ -3,11 +3,10 @@ from typing import Any, NamedTuple
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.update_coordinator import (DataUpdateCoordinator,
-                                                      UpdateFailed)
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import DOMAIN, LOGGER
-from .stromer import Stromer
+from .stromer import ApiError, Stromer
 
 
 class StromerData(NamedTuple):
@@ -18,7 +17,7 @@ class StromerData(NamedTuple):
     bike_name: str
 
 
-class StromerDataUpdateCoordinator(DataUpdateCoordinator[StromerData]):
+class StromerDataUpdateCoordinator(DataUpdateCoordinator[StromerData]):  # type: ignore[misc]
     """Class to manage fetching Stromer data from single endpoint."""
 
     def __init__(self, hass: HomeAssistant, stromer: Stromer, interval: float) -> None:
@@ -42,12 +41,8 @@ class StromerDataUpdateCoordinator(DataUpdateCoordinator[StromerData]):
             data = [bike_data, self.stromer.bike_id, self.stromer.bike_name]
             LOGGER.debug("Stromer data %s updated", data)
 
+        except ApiError as err:
+            raise UpdateFailed(f"Error communicating with API: {err}") from err
         except Exception as err:
             raise ConfigEntryAuthFailed from err
-        except ApiError as err:
-            raise UpdateFailed(f"Error communicating with API: {err}")
-        return StromerData(*data)
-
-
-class ApiError(BaseException):
-    """Error to indicate something wrong with the API."""
+        return StromerData(*data)  # type: ignore [arg-type]

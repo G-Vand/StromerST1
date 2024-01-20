@@ -4,7 +4,8 @@
   "codeowners": ["@G-Vand"],
   "config_flow": true,
   "documentation": "https://github.com/G-Vand/StromerST1",
+  "integration_type": "device",
   "iot_class": "cloud_polling",
   "requirements": [],
-  "version": "0.2.0"
+  "version": "0.3.1"
 }

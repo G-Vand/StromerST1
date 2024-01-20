@@ -5,15 +5,21 @@ from datetime import timedelta
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
 
 from .const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, DOMAIN, LOGGER
 from .coordinator import StromerDataUpdateCoordinator
-from .stromer import Stromer
+from .stromer import ApiError, Stromer
 
 SCAN_INTERVAL = timedelta(minutes=10)
 
-PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.DEVICE_TRACKER]
+PLATFORMS: list[Platform] = [
+    Platform.BINARY_SENSOR,
+    Platform.DEVICE_TRACKER,
+    Platform.SENSOR,
+    Platform.SWITCH,
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -28,15 +34,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Initialize connection to stromer
     stromer = Stromer(username, password, client_id, client_secret)
-    await stromer.stromer_connect()
-    LOGGER.debug("Stromer entry: {}".format(entry))
+    try:
+        await stromer.stromer_connect()
+    except ApiError as ex:
+        raise ConfigEntryNotReady("Error while communicating to Stromer API") from ex
+
+    LOGGER.debug(f"Stromer entry: {entry}")
 
     # Use Bike ID as unique id
     if entry.unique_id is None:
         hass.config_entries.async_update_entry(entry, unique_id=stromer.bike_id)
 
     # Set up coordinator for fetching data
-    coordinator = StromerDataUpdateCoordinator(hass, stromer, SCAN_INTERVAL)
+    coordinator = StromerDataUpdateCoordinator(hass, stromer, SCAN_INTERVAL)  # type: ignore[arg-type]
     await coordinator.async_config_entry_first_refresh()
 
     # Store coordinator for use in platforms
@@ -63,4 +73,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
 
-    return
+    return unload_ok  # type: ignore [no-any-return]
